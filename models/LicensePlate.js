@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const WordSchema = require('../models/Word');
 
 //Bonuses
 // three-in-a-row - word contains those three letters together
@@ -8,17 +9,19 @@ const Schema = mongoose.Schema;
 
 //need to calculate "count" (not same as array length because of root words)
 
-const SolutionsSchema = new Schema({
+const SolutionSchema = new Schema({
   _id: String,
-  word: String,
+  word: {},
   consecutive: Boolean,
   isRoot: Boolean,
-  frequency: Number
+  frequency: Number,
+  frequencyRank: Number,
+  lengthRank: Number
 });
 
 const LicensePlateSchema = new Schema({
   _id: String,
-  solutions: [SolutionsSchema],
+  solutions: [SolutionSchema],
   baseSolutionsCount: Number
 });
 
