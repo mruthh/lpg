@@ -16,6 +16,7 @@ class Puzzle extends React.Component {
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
+    this.handleSkip = this.handleSkip.bind(this);
   }
 
   componentDidMount() {
@@ -71,7 +72,7 @@ class Puzzle extends React.Component {
             onChange={this.handleInputChange}
             disabled={this.props.settings.time === 0}
           />
-          <button onClick={this.handleFormSubmit}>Skip</button>
+          <button onClick={this.handleSkip}>Skip</button>
         <button onClick={this.handleFormSubmit}>Solve</button>
         </form>
       </div >
