@@ -7,11 +7,11 @@ const Combinatorics = require('js-combinatorics');
 
 
 mongoose.connect('mongodb://127.0.0.1/lpg', { poolSize: 10, bufferMaxEntries: 0 });
-// mongoose.set('debug', true);
+mongoose.set('debug', true);
 
 const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
 let licensePlates = Combinatorics.baseN(alphabet, 3).toArray().map(array => array.join(''));
-
+let docsToSave = [];
 
 const findLettersInWord = (letters, word) => {
 
@@ -73,31 +73,34 @@ const createDocumentForLicensePlate = (string, words) => {
   }
 
   licensePlate.baseSolutionsCount = baseSolutionsCount;
-  licensePlate.save((err) => {
-    if (err) throw err
-    console.log(`saved ${licensePlate._id}`)
-  });
+  //push into holding array - this array will pass docs to mongo all at once.
+  docsToSave.push(licensePlate);
 }
 
 Word.find((err, data) => {
-  licensePlates.slice(100, 110).forEach((lp, index) => {
-    console.log(`creating document for ${lp}, ${index} of ${licensePlates.length}`)
-    createDocumentForLicensePlate(lp, data)
-    console.log(`done creating document for ${lp}, ${index} of ${licensePlates.length}`)
-  })
+  if (err) throw err;
+  function* populateLPs(words) {
+    let startIndex = 0;
+    let endIndex = startIndex + 1000;
+    while (startIndex < licensePlates.length) {
+      licensePlates.slice(startIndex, endIndex).forEach((lp, index) => {
+        console.log(`creating document for ${lp}, ${startIndex + index} of ${licensePlates.length}`)
+        createDocumentForLicensePlate(lp, words)
+        console.log(`done creating document for ${lp}, ${startIndex + index} of ${licensePlates.length}`)
+      });
+      startIndex += 1000;
+      endIndex += 1000;
+      LicensePlate.create(docsToSave, (err) => {
+        if (err) throw err;
+        runPopulate.next();
+      })
+      yield
+    }
+    //then do next 2K
+  }
+  const runPopulate = populateLPs(data);
+  runPopulate.next();
 });
 
-function* populateLPs(startIndex) {
-  let endIndex = startIndex + 2000;
-  while (startIndex < licensePlates.length) {
-    licensePlates.slice(startIndex, endIndex).forEach((lp, index) => {
-      console.log(`creating document for ${lp}, ${index} of ${licensePlates.length}`)
-      createDocumentForLicensePlate(lp, data)
-      console.log(`done creating document for ${lp}, ${index} of ${licensePlates.length}`)
-    });
-    startIndex += 2000;
-    endIndex += 2000;
-    yield
-  }
-  //then do next 2K
-}
+
+
