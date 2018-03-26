@@ -9,10 +9,11 @@ const Schema = mongoose.Schema;
 //need to calculate "count" (not same as array length because of root words)
 
 const SolutionsSchema = new Schema({
+  _id: String,
   word: String,
   consecutive: Boolean,
-  shortest: Boolean,
-  isRoot: Boolean
+  isRoot: Boolean,
+  frequency: Number
 });
 
 const LicensePlateSchema = new Schema({
