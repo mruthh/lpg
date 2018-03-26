@@ -6,11 +6,11 @@ const Word = require('../models/Word');
 const Combinatorics = require('js-combinatorics');
 
 
-mongoose.connect('mongodb://127.0.0.1/lpg', {poolSize: 10, bufferMaxEntries: 0});
+mongoose.connect('mongodb://127.0.0.1/lpg', { poolSize: 10, bufferMaxEntries: 0 });
 // mongoose.set('debug', true);
 
 const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
-let licensePlates = Combinatorics.baseN(alphabet, 3).toArray().map( array => array.join(''));
+let licensePlates = Combinatorics.baseN(alphabet, 3).toArray().map(array => array.join(''));
 
 
 const findLettersInWord = (letters, word) => {
@@ -30,12 +30,12 @@ const findLettersInWord = (letters, word) => {
 //function that takes a license plate string and creates a document in the database for it.
 const createDocumentForLicensePlate = (string, words) => {
   let licensePlate = new LicensePlate({ _id: string });
-  let solutions = words.filter( (word) => {
+  let solutions = words.filter((word) => {
     return findLettersInWord(string, word._id);
   })
 
   // need to count words who are their own root word AND words whose root words aren't solutions.
-  let baseSolutionsCount = solutions.reduce( (count, solution) => {
+  let baseSolutionsCount = solutions.reduce((count, solution) => {
     if (solution.rootWord === solution._id || !findLettersInWord(string, solution.rootWord)) {
       return count + 1;
     } else {
@@ -43,12 +43,12 @@ const createDocumentForLicensePlate = (string, words) => {
     }
   }, 0);
 
-  licensePlate.solutions = solutions.map( (solution) => {
+  licensePlate.solutions = solutions.map((solution) => {
     return {
       // word: solution._id,
       // frequency: solution.frequency,
       word: solution,
-      isRoot: solution.rootWord === solution._id, 
+      isRoot: solution.rootWord === solution._id,
       consecutive: solution._id.includes(string),
       frequencyRank: -1,
       lengthRank: -1
@@ -57,7 +57,7 @@ const createDocumentForLicensePlate = (string, words) => {
 
   // sort by frequency. lowest freq has lowest index.
 
-  licensePlate.solutions.sort( (a, b) => {
+  licensePlate.solutions.sort((a, b) => {
     return a.frequency < b.frequency;
   });
   for (let i = 0; i < licensePlate.solutions.length; i++) {
@@ -65,7 +65,7 @@ const createDocumentForLicensePlate = (string, words) => {
   }
 
   //sort by length. lowest length has lowest index.
- licensePlate.solutions.sort( (a, b) => {
+  licensePlate.solutions.sort((a, b) => {
     return a.word._id.length > b.word._id.length;
   });
   for (let i = 0; i < licensePlate.solutions.length; i++) {
@@ -73,7 +73,7 @@ const createDocumentForLicensePlate = (string, words) => {
   }
 
   licensePlate.baseSolutionsCount = baseSolutionsCount;
-  licensePlate.save( (err) => {
+  licensePlate.save((err) => {
     if (err) throw err
     console.log(`saved ${licensePlate._id}`)
   });
@@ -87,17 +87,17 @@ Word.find((err, data) => {
   })
 });
 
-//needs the following:
-/*
-_id: String,
-solutions: [SolutionsSchema],
-baseSolutionsCount: Number
-
-const SolutionsSchema = new Schema({
-  word: String,
-  consecutive: Boolean,
-  shortest: Boolean,
-  isRoot: Boolean
-});
-*/
-
+function* populateLPs(startIndex) {
+  let endIndex = startIndex + 2000;
+  while (startIndex < licensePlates.length) {
+    licensePlates.slice(startIndex, endIndex).forEach((lp, index) => {
+      console.log(`creating document for ${lp}, ${index} of ${licensePlates.length}`)
+      createDocumentForLicensePlate(lp, data)
+      console.log(`done creating document for ${lp}, ${index} of ${licensePlates.length}`)
+    });
+    startIndex += 2000;
+    endIndex += 2000;
+    yield
+  }
+  //then do next 2K
+}
