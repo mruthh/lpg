@@ -1,5 +1,5 @@
 import { dictionary } from './data';
-
+console.log(dictionary.length)
 
 function makeString() {
   const consonants = 'bcdfghjklmnpqrstvwxyz' //length = 21
