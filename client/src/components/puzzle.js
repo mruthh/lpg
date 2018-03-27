@@ -12,11 +12,14 @@ class Puzzle extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      inputWord: ''
+      inputWord: '',
+      error: '',
+      bonuses: []
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
     this.handleSkip = this.handleSkip.bind(this);
+    this.error = null;
   }
 
   componentDidMount() {
@@ -40,6 +43,7 @@ class Puzzle extends React.Component {
 
   handleFormSubmit(event) {
     event.preventDefault();
+    this.setState({ error: '' })
     let sanitizedInputWord = this.state.inputWord.toLowerCase();
     let currentLicensePlate = this.props.game.currentLicensePlate;
     if (currentLicensePlate.solutions.find((solution) => {
@@ -49,9 +53,9 @@ class Puzzle extends React.Component {
         licensePlate: currentLicensePlate,
         guess: sanitizedInputWord
       });
-      this.setState({inputWord: ''})
+      this.setState({ inputWord: '' })
     } else {
-      this.setState({ inputWord: 'Nope' })
+      this.setState({ error: 'Not a valid solution.' })
     }
     this.wordInput.focus()
     //check if this.state.inputWord matches an array item in current license plate
@@ -61,14 +65,37 @@ class Puzzle extends React.Component {
 
   handleSkip(event) {
     event.preventDefault();
+    this.setState({ error: '' })
     this.props.adjustSkips(-1);
     this.props.moveToNextLicensePlate({
       licensePlate: this.props.game.currentLicensePlate,
       guess: ''
     });
     this.wordInput.focus()
-    this.setState({inputWord: ''})
+    this.setState({ inputWord: '' })
   }
+  renderBonuses(){
+    if (this.state.bonuses.length){
+      let bonuses = this.state.bonuses.map( (bonus) => {
+        return <span className="text-primary text-bold"> *{bonus}*</span>
+      })
+    } else {
+      return null;
+    }
+  }
+  
+  renderErrors() {
+    if (this.state.error) {
+      return (
+          <div className="col-md-12 text-center text-danger">
+            {this.state.error}
+          </div>
+      )
+    } else {
+      return null;
+    }
+  }
+
   render() {
     if (!this.props.game.currentLicensePlate) return null;
     const solveStyle = {
@@ -77,31 +104,36 @@ class Puzzle extends React.Component {
     const skipStyle = {
       'background-color': '#f6815e'
     };
+
+
+
     return (
         <div className="row">
           <div className="col-md-12">
-            <h1 className="text-center d-block">{this.props.game.currentLicensePlate._id.toUpperCase()}</h1>
+            <h1 className="text-center d-block">
+            {this.props.game.currentLicensePlate._id.toUpperCase()}
+            </h1>
           </div>
-          {/* insert error or score messages here */}
-          <div className="col-md-12">
-            <form className="w-100">
-              <input className="d-block w-100 mt-2 text-center" type="text"
-                value={this.state.inputWord}
-                onChange={this.handleInputChange}
-                disabled={this.props.settings.time === 0}
-                ref={(input) => {this.wordInput = input} }
-              />
-              <button className="btn btn-lg float-right m-1" 
-                disabled={!this.props.game.remainingTime}
-                style={solveStyle}
-                onClick={this.handleFormSubmit}>Solve</button>
-              <button className="btn btn-lg float-left m-2" 
-                disabled={!this.props.game.remainingTime}
-                style={skipStyle}
-                onClick={this.handleSkip}>Skip</button>
-            </form>
-            </div>
-          </div>
+        {this.renderErrors()}
+        <div className="col-md-12">
+          <form className="w-100">
+            <input className="d-block w-100 mt-2 text-center" type="text"
+              value={this.state.inputWord}
+              onChange={this.handleInputChange}
+              disabled={this.props.settings.time === 0}
+              ref={(input) => { this.wordInput = input }}
+            />
+            <button className="btn btn-lg float-right m-1"
+              disabled={!this.props.game.remainingTime}
+              style={solveStyle}
+              onClick={this.handleFormSubmit}>Solve</button>
+            <button className="btn btn-lg float-left m-2"
+              disabled={!this.props.game.remainingTime}
+              style={skipStyle}
+              onClick={this.handleSkip}>Skip</button>
+          </form>
+        </div>
+      </div>
     )
   }
 }
