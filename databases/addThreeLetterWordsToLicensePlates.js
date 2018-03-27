@@ -1,20 +1,11 @@
-const fs = require('fs');
 const mongoose = require('mongoose');
 const LicensePlate = require('../models/LicensePlate');
 const LicensePlateSchema = require('../models/LicensePlate');
-const Word = require('../models/Word');
-const Combinatorics = require('js-combinatorics');
+const populateLicensePlates = require('./populateLicensePlates')
+const threeLetterWordDictionary = require('./addThreeLetterWords');
 
 mongoose.connect('mongodb://127.0.0.1/lpg', { poolSize: 10, bufferMaxEntries: 0 });
 mongoose.set('debug', true);
-
-const generateLicensePlates = () => {
-  const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
-  let licensePlates = Combinatorics.baseN(alphabet, 3).toArray().map(array => array.join(''));
-}
-
-
-let licensePlates = generateLicensePlates();
 
 let docsToSave = [];
 
@@ -83,32 +74,19 @@ const createDocumentForLicensePlate = (string, words) => {
 }
 
 const populateLicensePlates = (licensePlates) => {
-    Word.find((err, data) => {
-    if (err) throw err;
-    function* populateLPs(words) {
-      let startIndex = 0;
-      let endIndex = startIndex + 1;
-      while (startIndex < licensePlates.length) {
-        licensePlates.slice(startIndex, endIndex).forEach((lp, index) => {
-          console.log(`creating document for ${lp}, ${startIndex + index} of ${licensePlates.length}`)
-          createDocumentForLicensePlate(lp, words)
-          console.log(`done creating document for ${lp}, ${startIndex + index} of ${licensePlates.length}`)
+  licensePlates.forEach((lp) => {
+    Word.findById(lp)
+      .exec((err, data) => {
+        if (err) throw err;
+        licensePlates.forEach((lp, index) => {
+          console.log(`creating document for ${lp}, ${index} of ${licensePlates.length}`)
+          createDocumentForLicensePlate(lp, data)
+          console.log(`done creating document for ${lp}, ${index} of ${licensePlates.length}`)
         });
-        startIndex += 1000;
-        endIndex += 1000;
         LicensePlate.create(docsToSave, (err) => {
           if (err) throw err;
           console.log('done!')
-          // runPopulate.next();
         })
-        yield
-      }
-      //then do next 2K
-    }
-    const runPopulate = populateLPs(data);
-    runPopulate.next();
+      });
   });
 }
-
-populateLicensePlates(licensePlates);
-
