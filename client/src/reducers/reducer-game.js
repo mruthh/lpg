@@ -1,6 +1,6 @@
 import { makeQueue } from '../oldLPG/main';
-import { ADJUST_TIME, SET_TIME, FETCH_LICENSE_PLATES, MOVE_TO_NEXT_LICENSE_PLATE, ADJUST_SKIPS, SET_SKIPS, RESET_GAME } from '../actions';
-
+import { ADJUST_TIME, SET_TIME, FETCH_LICENSE_PLATES, MOVE_TO_NEXT_LICENSE_PLATE, ADJUST_SKIPS, SET_SKIPS, UPDATE_SCORE, RESET_GAME } from '../actions';
+import calculateScore from './calculate-score';
 
 const defaultLicensePlates = {
   currentLicensePlate: makeQueue(1)[0],
@@ -64,6 +64,9 @@ export default function (state = defaultGameState, action) {
     }
     case (RESET_GAME): {
       return defaultGameState;
+    }
+    case (UPDATE_SCORE): {
+      return {...state, score: state.score + calculateScore(action.payload)}
     }
     default: {
       return state;

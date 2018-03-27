@@ -5,7 +5,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { adjustTime, setTime, adjustSkips, setSkips, fetchLicensePlates, moveToNextLicensePlate, resetGame } from '../actions';
+import { adjustTime, setTime, adjustSkips, setSkips, updateScore, fetchLicensePlates, moveToNextLicensePlate, resetGame } from '../actions';
 
 
 class Puzzle extends React.Component {
@@ -49,10 +49,11 @@ class Puzzle extends React.Component {
     let validSolution = currentLicensePlate.solutions.find((solution) => {
       return solution.word._id === sanitizedInputWord
     }) 
-      if (validSolution) {
-        if (validSolution.consecutive) {
-          this.setState({bonuses: [...[this.state.bonuses], 'consecutive']})
-        }
+    if (validSolution) {
+      if (validSolution.consecutive) {
+        this.setState({bonuses: [...[this.state.bonuses], 'consecutive']})
+      }
+      this.props.updateScore(validSolution, this.props.game.currentLicensePlate.baseSolutionsCount);
       this.props.moveToNextLicensePlate({
         licensePlate: currentLicensePlate,
         guess: sanitizedInputWord
@@ -182,7 +183,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ adjustTime, setTime, adjustSkips, setSkips, fetchLicensePlates, moveToNextLicensePlate, resetGame }, dispatch)
+  return bindActionCreators({ adjustTime, setTime, adjustSkips, setSkips, fetchLicensePlates, moveToNextLicensePlate, updateScore, resetGame }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Puzzle);

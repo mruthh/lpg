@@ -12,10 +12,11 @@ const Clock = (props) => {
   }
 
   const renderScore = (props) => {
-    let score = this.props.game.score.toString();
+    let score = props.game.score.toString();
     while (score.length < 6) {
       score = '0' + score;
     }
+    return score;
   }
 
   const renderSkips = (props) => {
@@ -30,7 +31,7 @@ const Clock = (props) => {
     <div>
       <div className="row">
         <div className="col-md-6 text-left">{convertMilliseconds(props.game.remainingTime)}</div>
-        <div className="col-md-6 text-right">lol I'm a score</div>
+        <div className="col-md-6 text-right">{renderScore(props)}</div>
       </div>
       <div className="row">
         <div className="col-md-12 text-left">
