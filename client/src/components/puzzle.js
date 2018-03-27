@@ -5,7 +5,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { adjustTime, setTime, moveToNextLicensePlate } from '../actions';
+import { adjustTime, setTime, fetchLicensePlates, moveToNextLicensePlate } from '../actions';
 
 
 class Puzzle extends React.Component {
@@ -20,16 +20,15 @@ class Puzzle extends React.Component {
   }
 
   componentDidMount() {
-    //set clock to maxTime, then setInterval for countdown
-    //maxTime will eventually be props, but hard-code it for now.
-    this.props.setTime(60 * 1000);
-    this.countdown = setInterval(this.props.adjustTime,
-      1000, -1000)
+    this.props.fetchLicensePlates(this.props.settings.gameSize)
+    this.props.setTime(this.props.settings.maxTime);
+    this.countdown = setInterval(this.props.adjustTime, 1000, -1000)
   }
 
-  componentDidUpdate() {
+
+  componentDidUpdate(prevProps) {
     //clearInterval if time has reached zero
-    if (this.props.settings.time === 0) {
+    if (this.props.game.remainingTime === 0) {
       clearInterval(this.countdown);
     }
   }
@@ -41,10 +40,12 @@ class Puzzle extends React.Component {
   handleFormSubmit(event) {
     event.preventDefault();
     let sanitizedInputWord = this.state.inputWord.toLowerCase();
-    let currentLicensePlate = this.props.licensePlates.currentLicensePlate;
-    if (currentLicensePlate.solutions.includes(sanitizedInputWord)) {
+    let currentLicensePlate = this.props.game.currentLicensePlate;
+    if (currentLicensePlate.solutions.find( (solution) => {
+      return solution.word._id === sanitizedInputWord
+    }) ) {
       this.props.moveToNextLicensePlate({
-        letters: currentLicensePlate.letters,
+        licensePlate: currentLicensePlate,
         guess: sanitizedInputWord
       });
     } else {
@@ -58,14 +59,15 @@ class Puzzle extends React.Component {
   handleSkip(event){
     event.preventDefault();
     this.props.moveToNextLicensePlate({
-      letters: this.props.licensePlates.currentLicensePlate.letters,
+      licensePlate: this.props.game.currentLicensePlate,
       guess: ''
     });
   }
   render() {
+    if (!this.props.game.currentLicensePlate) return null;
     return (
       <div>
-        <h1>{this.props.licensePlates.currentLicensePlate.letters}</h1>
+        <h1>{this.props.game.currentLicensePlate._id.toUpperCase()}</h1>
         <form>
           <input type="text"
             value={this.state.inputWord}
@@ -82,13 +84,13 @@ class Puzzle extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    licensePlates: state.licensePlates,
+    game: state.game,
     settings: state.settings
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ adjustTime, setTime, moveToNextLicensePlate }, dispatch)
+  return bindActionCreators({ adjustTime, setTime, fetchLicensePlates, moveToNextLicensePlate }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Puzzle);

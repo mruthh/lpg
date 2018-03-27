@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from "react-redux";
-import moment from 'moment';
 
 const Clock = (props) => {
   
@@ -13,12 +12,12 @@ const Clock = (props) => {
   }
 
   return (
-      <div>{convertMilliseconds(props.settings.time)}</div>
+      <div>{convertMilliseconds(props.game.remainingTime)}</div>
     )
 }
 
 function mapStateToProps(state){
-  return { settings: state.settings }
+  return { game: state.game }
 }
 
 export default connect(mapStateToProps)(Clock);

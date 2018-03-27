@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 import settingsReducer from './reducer-settings';
-import licensePlatesReducer from './reducer-license-plates';
+import gameReducer from './reducer-game';
 
 const rootReducer = combineReducers({
-  licensePlates: licensePlatesReducer,
+  game: gameReducer,
   settings: settingsReducer
 });
 
