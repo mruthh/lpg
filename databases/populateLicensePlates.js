@@ -55,40 +55,21 @@ const createDocumentForLicensePlate = (string, words) => {
     };
   });
 
-
   // sort by frequency. lowest freq has lowest index.
-  // licensePlate.solutions.sort((a, b) => {
-  //   return a.frequency < b.frequency;
-  // });
-  // for (let i = 0; i < licensePlate.solutions.length; i++) {
-  //   licensePlate.solutions[i].frequencyRank = i;
-  // }
 
-  //sort by length. lowest length has lowest index.
   licensePlate.solutions.sort((a, b) => {
-    return a.word.frequency > b.word.frequency;
+    return a.frequency < b.frequency;
   });
-  let frequencyRank = 0;
   for (let i = 0; i < licensePlate.solutions.length; i++) {
-    let currentLP = licensePlate.solutions[i];
-    let prevLP = licensePlate.solutions[i - 1];
-    if (prevLP && currentLP.word.frequency > prevLP.word.frequency) {
-      frequencyRank += 1;
-    }
-    currentLP.frequencyRank = frequencyRank;
+    licensePlate.solutions[i].frequencyRank = i;
   }
+
   //sort by length. lowest length has lowest index.
   licensePlate.solutions.sort((a, b) => {
     return a.word._id.length > b.word._id.length;
   });
-  let lengthRank = 0;
   for (let i = 0; i < licensePlate.solutions.length; i++) {
-    let currentLP = licensePlate.solutions[i];
-    let prevLP = licensePlate.solutions[i - 1];
-    if (prevLP && currentLP.word._id.length > prevLP.word._id.length) {
-      lengthRank += 1;
-    }
-    currentLP.lengthRank = lengthRank;
+    licensePlate.solutions[i].lengthRank = i;
   }
 
   licensePlate.baseSolutionsCount = baseSolutionsCount;
@@ -99,8 +80,8 @@ const createDocumentForLicensePlate = (string, words) => {
 Word.find((err, data) => {
   if (err) throw err;
   function* populateLPs(words) {
-    let startIndex = 3000;
-    let endIndex = startIndex + 1;
+    let startIndex = 17001;
+    let endIndex = startIndex + 1000;
     while (startIndex < licensePlates.length) {
       licensePlates.slice(startIndex, endIndex).forEach((lp, index) => {
         console.log(`creating document for ${lp}, ${startIndex + index} of ${licensePlates.length}`)
@@ -111,7 +92,8 @@ Word.find((err, data) => {
       endIndex += 1000;
       LicensePlate.create(docsToSave, (err) => {
         if (err) throw err;
-        runPopulate.next();
+        console.log('done!')
+        // runPopulate.next();
       })
       yield
     }
