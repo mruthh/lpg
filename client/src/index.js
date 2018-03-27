@@ -17,7 +17,7 @@ const store = createStoreWithMiddleware(reducers);
 
 const App = () => {
   return (
-    <div className ="container-fluid w-25 mt-5 p-5">
+    <div className ="container white-box w-25 mt-5 p-5">
       <Clock />
       <Puzzle />
     </div>)
