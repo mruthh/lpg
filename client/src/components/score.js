@@ -1,16 +1,15 @@
 import React from 'react';
 import { connect } from "react-redux";
-import moment from 'moment';
 
 const Score = (props) => {
   
-  return (
-      <div>{convertMilliseconds(props.settings.time)}</div>
+   return (
+      <div>lol I'm a score</div>
     )
 }
 
 function mapStateToProps(state){
-  return { settings: state.settings }
+  return { game: state.game }
 }
 
-export default connect(mapStateToProps)(Clock);
+export default connect(mapStateToProps)(Score);

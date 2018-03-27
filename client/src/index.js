@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 
 import Puzzle from './components/puzzle';
 import Clock from './components/clock';
+import Score from './components/score';
 
 const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
 
@@ -16,8 +17,8 @@ const store = createStoreWithMiddleware(reducers);
 
 const App = () => {
   return (
-    <div>
-      <Clock />    
+    <div className ="container-fluid w-25 mt-5 p-5">
+      <Clock />
       <Puzzle />
     </div>)
 }

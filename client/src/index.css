@@ -5,3 +5,11 @@ body {
   background-image: url("./assets/license-plate-2438210_1920.jpg");
   background-size: cover;
 }
+
+.container-fluid {
+  background-color: white;
+}
+
+div {
+  border: 1px solid blueviolet;
+}

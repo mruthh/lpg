@@ -1,5 +1,5 @@
 import { makeQueue } from '../oldLPG/main';
-import { ADJUST_TIME, SET_TIME, FETCH_LICENSE_PLATES, MOVE_TO_NEXT_LICENSE_PLATE } from '../actions';
+import { ADJUST_TIME, SET_TIME, FETCH_LICENSE_PLATES, MOVE_TO_NEXT_LICENSE_PLATE, ADJUST_SKIPS, SET_SKIPS } from '../actions';
 
 
 const defaultLicensePlates = {
@@ -25,6 +25,12 @@ export default function (state = defaultGameState, action) {
     case(SET_TIME): {
       return {...state, remainingTime: action.payload}
     }
+    case(ADJUST_SKIPS): {
+      return {...state, remainingSkips: state.remainingSkips + action.payload}
+    }
+    case(SET_SKIPS): {
+      return {...state, remainingSkips: action.payload}
+    }
     case (FETCH_LICENSE_PLATES): {
       if (action.payload.data) {
         console.log(action.payload)
@@ -33,7 +39,7 @@ export default function (state = defaultGameState, action) {
           currentLicensePlate: action.payload.data[0], 
           queue: action.payload.data.slice(1)
         }
-    }
+      }
     }
     case (MOVE_TO_NEXT_LICENSE_PLATE): {
       //move guess to history
