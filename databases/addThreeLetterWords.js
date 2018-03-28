@@ -4,6 +4,8 @@ const Word = require('../models/Word');
 const datamuse = require('datamuse');
 const winston = require('winston');
 
+mongoose.connect('mongodb://127.0.0.1/lpg', {poolSize: 10});
+
 winston.add(
   winston.transports.File, {
     filename: './databases/rejectedWords.log',
@@ -61,7 +63,7 @@ const addThreeLetterWords = () => {
   });
 }
 
-
+addThreeLetterWords();
 //Once added, re-run populateLicensePlates on licensePlates whose _ids exactly match all three letters in the three letter word - only exact matches will be affected by adding 3-letter words to dictionary.
 
-module.exports = { dictionary };
+// module.exports = { dictionary };
