@@ -23,16 +23,15 @@ class Puzzle extends React.Component {
   }
 
   componentDidMount() {
-    this.props.fetchLicensePlates(this.props.settings.gameSize);
     this.props.setSkips(this.props.settings.maxSkips);
     this.props.setTime(this.props.settings.maxTime);
     this.countdown = setInterval(this.props.adjustTime, 1000, -1000)
   }
 
-
   componentDidUpdate(prevProps) {
     //clearInterval if time has reached zero
     if (this.props.game.remainingTime === 0) {
+      // console.log('reached 0')
       clearInterval(this.countdown);
     }
   }
@@ -164,7 +163,7 @@ class Puzzle extends React.Component {
               style={solveStyle}
               onClick={this.handleFormSubmit}>Solve</button>
             <button className="btn btn-lg float-left m-2"
-              disabled={!this.props.game.remainingTime}
+              disabled={!this.props.game.remainingSkips || !this.props.game.remainingTime}
               style={skipStyle}
               onClick={this.handleSkip}>Skip</button>
           </form>

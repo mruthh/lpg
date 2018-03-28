@@ -39,6 +39,8 @@ export default function (state = defaultGameState, action) {
           currentLicensePlate: action.payload.data[0], 
           queue: action.payload.data.slice(1)
         }
+      } else {
+        return state;
       }
     }
     case (MOVE_TO_NEXT_LICENSE_PLATE): {
@@ -63,7 +65,7 @@ export default function (state = defaultGameState, action) {
       return newState;
     }
     case (RESET_GAME): {
-      return defaultGameState;
+      return {...state, remainingTime: 0};
     }
     case (UPDATE_SCORE): {
       return {...state, score: state.score + calculateScore(action.payload)}

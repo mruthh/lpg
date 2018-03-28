@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from "react-redux";
 
-const Clock = (props) => {
+const GameAssets = (props) => {
 
   const convertMilliseconds = (ms) => {
     let totalSeconds = Math.floor(ms / 1000);
@@ -23,7 +23,7 @@ const Clock = (props) => {
     let skips = [];
     let singleSkip = 'skip';
     for (let i = 0; i < props.game.remainingSkips; i++) {
-      skips.push(<span> {singleSkip} </span>);
+      skips.push(<span key={i}> {singleSkip} </span>);
     }
     return skips.length ? skips : <span>No Skips Remaining</span>
   }
@@ -46,4 +46,4 @@ function mapStateToProps(state){
   return {game: state.game }
     }
     
-export default connect(mapStateToProps)(Clock);
+export default connect(mapStateToProps)(GameAssets);

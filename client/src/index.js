@@ -1,3 +1,4 @@
+import { BrowserRouter, Switch, Route} from 'react-router-dom';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from "react-redux";
@@ -8,9 +9,9 @@ import './index.css';
 import 'bootstrap/dist/css/bootstrap.css';
 
 import Puzzle from './components/puzzle';
-import Clock from './components/clock';
-import Score from './components/score';
+import GameAssets from './components/game-assets';
 import StartScreen from './components/start-screen';
+import HistoryBar from './components/history-bar';
 
 const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
 
@@ -19,21 +20,30 @@ const store = createStoreWithMiddleware(reducers);
 const App = () => {
   return (
     <div className="container white-box mt-5 p-5">
-      <StartScreen />
+    <Switch>
+    <Route exact path='/' component={StartScreen} />
+    <Route path = '/details/' />
+    <Route path = '/game/'>
        <div className="row">
           <div className="col-md-4">
+            <HistoryBar />
           </div>
           <div className="col-md-4">
-            <Clock />
+            <GameAssets />
             <Puzzle />
           </div>
         </div>
-      </div>)
+        </Route>
+      </Switch>
+      </div>
+      )
   }
 
 
   ReactDOM.render(
-<Provider store={store}>
+    <BrowserRouter>
+      <Provider store={store}>
         <App />
-      </Provider>,
+      </Provider>
+      </BrowserRouter> ,
         document.getElementById('root'));
