@@ -10,6 +10,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import Puzzle from './components/puzzle';
 import Clock from './components/clock';
 import Score from './components/score';
+import StartScreen from './components/start-screen';
 
 const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
 
@@ -17,15 +18,22 @@ const store = createStoreWithMiddleware(reducers);
 
 const App = () => {
   return (
-    <div className ="container white-box w-25 mt-5 p-5">
-      <Clock />
-      <Puzzle />
-    </div>)
-}
+    <div className="container white-box mt-5 p-5">
+      <StartScreen />
+       <div className="row">
+          <div className="col-md-4">
+          </div>
+          <div className="col-md-4">
+            <Clock />
+            <Puzzle />
+          </div>
+        </div>
+      </div>)
+  }
 
 
-ReactDOM.render(
+  ReactDOM.render(
 <Provider store={store}>
-  <App /> 
-</Provider>,
-  document.getElementById('root'));
+        <App />
+      </Provider>,
+        document.getElementById('root'));
