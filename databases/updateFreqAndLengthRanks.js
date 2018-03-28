@@ -11,25 +11,30 @@ mongoose.set('debug', true);
 //Find all items. Rerun length and frequency sorts. Save.
 //Also run checks for "is shortest, is longest, is rarest, is commonest"
 
-LicensePlate.find({_id: 'zoo'}).exec( (err, data) => {
-  data.slice(0, 1).forEach( (oldLp) => {
-    console.log(oldLp)
+LicensePlate.find().exec( (err, data) => {
+  data.slice(0,1000).forEach( (lp, index) => {
+    console.log(lp)
     //add "is shortest, is longest, is rarest, is commonest" boolean properties to each lp.
 
-    let lp = oldLp.solutions.map( (solution) => {
-      return {
-        ...solution, 
-        isShortest: false,
-        isLongest: false,
-        isRarest: false,
-        isCommonest: false
-      }
+    lp.solutions.forEach( (solution) => {
+      solution.isShortest = false,
+      solution.isLongest = false,
+      solution.isRarest = false,
+      solution.isCommonest = false
     })
+
     
     //helper function to re-run frequency and length sorts
-    const sortAndCompare = (propertyToCompare, lowProperty, highProperty) => {
+    const sortAndCompare = (propertyToCompare, lowProperty, highProperty, rankName) => {
+      const getPropertyToCompare = (solution, propertyToCompare) => {
+        if (propertyToCompare === 'frequency') {
+          return solution.word.frequency;
+        } else {
+          return solution.word._id.length;
+        }
+      }
       lp.solutions.sort((a, b) => {
-        return a.word[propertyToCompare] - b.word[propertyToCompare];
+        return getPropertyToCompare(a, propertyToCompare) - getPropertyToCompare(b, propertyToCompare);
       });
 
       let first = lp.solutions[0];
@@ -38,26 +43,28 @@ LicensePlate.find({_id: 'zoo'}).exec( (err, data) => {
       let nextToLast = lp.solutions[lp.solutions.length - 2];
 
       //check if first item is less than second item. if so, lowProperty=true
-      if (first.word[propertyToCompare] < second.word[propertyToCompare] || !second) {
+      if (getPropertyToCompare(first, propertyToCompare) < getPropertyToCompare(second, propertyToCompare) || !second) {
         first[lowProperty] = true;
       }
 
       //check if last item is greater than next-to-last item. if so, highProperty=true
-      if (last.word[propertyToCompare] > nextToLast.word[propertyToCompare]) {
+      if (getPropertyToCompare(last, propertyToCompare) > getPropertyToCompare(nextToLast, propertyToCompare)) {
         last[highProperty] = true;
       }
 
       //assign ranks
-      for (let i = 0; i < licensePlate.solutions.length; i++) {
-        licensePlate.solutions[i].frequencyRank = i;
+
+      for (let i = 0; i < lp.solutions.length; i++) {
+        lp.solutions[i][rankName] = i;
       }
     }
 
     if (lp.solutions.length) {
-      sortAndCompare(frequency, isRarest, isCommonest);
-      sortAndCompare(_id.length, isShortest, isLongest)
+      sortAndCompare('length', 'isShortest', 'isLongest', 'lengthRank')
+      sortAndCompare('frequency', 'isRarest', 'isCommonest', 'frequencyRank');
       lp.save( (err, res) => {
         if (err) throw err;
+        console.log(`saving ${lp._id}, ${index} of ${data.length}`)
       })
     }
   });
