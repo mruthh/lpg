@@ -9,6 +9,7 @@ const WordSchema = require('../models/Word');
 
 //need to calculate "count" (not same as array length because of root words)
 
+
 const SolutionSchema = new Schema({
   _id: String,
   word: {},

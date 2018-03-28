@@ -1,20 +1,21 @@
 const fs = require('fs');
 const mongoose = require('mongoose');
+const Word = require('../models/Word');
 const LicensePlate = require('../models/LicensePlate');
 const LicensePlateSchema = require('../models/LicensePlate');
-const Word = require('../models/Word');
-const Combinatorics = require('js-combinatorics');
 
 mongoose.connect('mongodb://127.0.0.1/lpg', { poolSize: 10, bufferMaxEntries: 0 });
 mongoose.set('debug', true);
 
-const generateLicensePlates = () => {
-  const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
-  let licensePlates = Combinatorics.baseN(alphabet, 3).toArray().map(array => array.join(''));
-}
+let dictionary = null;
 
+const words = fs.readFileSync('./databases/words.txt', 'utf8');
+  const lowerCaseRegExp = new RegExp('^[a-z]*$');
+  dictionary = words
+    .split('\n')
+    .filter(word => lowerCaseRegExp.test(word) && word.length === 3)
 
-let licensePlates = generateLicensePlates();
+//for each word in the dictionary array (all of which are three letter words), I want to 
 
 let docsToSave = [];
 
@@ -34,7 +35,7 @@ const findLettersInWord = (letters, word) => {
 
 //function that takes a license plate string and creates a document in the database for it.
 const createDocumentForLicensePlate = (string, words) => {
-  let licensePlate = { _id: string };
+  let licensePlate = {};
   let solutions = words.filter((word) => {
     return findLettersInWord(string, word._id);
   })
@@ -63,7 +64,7 @@ const createDocumentForLicensePlate = (string, words) => {
   // sort by frequency. lowest freq has lowest index.
 
   licensePlate.solutions.sort((a, b) => {
-    return a.frequency < b.frequency;
+    return a.word.frequency - b.word.frequency;
   });
   for (let i = 0; i < licensePlate.solutions.length; i++) {
     licensePlate.solutions[i].frequencyRank = i;
@@ -71,44 +72,36 @@ const createDocumentForLicensePlate = (string, words) => {
 
   //sort by length. lowest length has lowest index.
   licensePlate.solutions.sort((a, b) => {
-    return a.word._id.length > b.word._id.length;
+    return a.word._id.length - b.word._id.length;
   });
   for (let i = 0; i < licensePlate.solutions.length; i++) {
     licensePlate.solutions[i].lengthRank = i;
   }
 
   licensePlate.baseSolutionsCount = baseSolutionsCount;
-  //push into holding array - this array will pass docs to mongo all at once.
-  docsToSave.push(licensePlate);
+  //return an infoToUpdate object
+  return {string, licensePlate};
 }
 
-const populateLicensePlates = (licensePlates) => {
-    Word.find((err, data) => {
+
+const updateExactMatches = () => {
+  Word.find((err, data) => {
     if (err) throw err;
-    function* populateLPs(words) {
-      let startIndex = 0;
-      let endIndex = startIndex + 1;
-      while (startIndex < licensePlates.length) {
-        licensePlates.slice(startIndex, endIndex).forEach((lp, index) => {
-          console.log(`creating document for ${lp}, ${startIndex + index} of ${licensePlates.length}`)
-          createDocumentForLicensePlate(lp, words)
-          console.log(`done creating document for ${lp}, ${startIndex + index} of ${licensePlates.length}`)
-        });
-        startIndex += 1000;
-        endIndex += 1000;
-        LicensePlate.create(docsToSave, (err) => {
-          if (err) throw err;
-          console.log('done!')
-          // runPopulate.next();
-        })
-        yield
-      }
-      //then do next 2K
-    }
-    const runPopulate = populateLPs(data);
-    runPopulate.next();
-  });
+    dictionary.forEach( (threeLetterWord, index) => {
+      console.log(`creating document for ${threeLetterWord}, ${index} of ${dictionary.length}`);
+      let infoToUpdate = createDocumentForLicensePlate(threeLetterWord, data);
+      LicensePlate.findByIdAndUpdate(infoToUpdate.string, infoToUpdate.licensePlate, {overwrite: true}, (err, res) => { if (err) throw err;})
+      console.log(`done creating document for ${threeLetterWord}, ${index} of ${dictionary.length}`)
+    });
+  })
 }
 
-populateLicensePlates(licensePlates);
+updateExactMatches();
+//for each three letter word, find the license plate that is its exact match.
+
+// build a list of 3-letter license LicensePlates. this will be this script's version of dictionary.slice.
+
+
+// run the createDocumentForLicensePlate function and update the fields on that license plate, overwriting existing data
+
 

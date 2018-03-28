@@ -1,15 +1,11 @@
 const fs = require('fs');
-const datamuse = require('datamuse');
 const mongoose = require('mongoose');
-const wordSchema = require('../models/Word');
 const Word = require('../models/Word');
+const datamuse = require('datamuse');
 const winston = require('winston');
-
 
 mongoose.connect('mongodb://127.0.0.1/lpg', {poolSize: 10});
 
-
-//add logger. logs will be used to track any words from the Unix system dictionary that were not found in the datamuse API.
 winston.add(
   winston.transports.File, {
     filename: './databases/rejectedWords.log',
@@ -18,8 +14,11 @@ winston.add(
     timestamp: true
   }
 );
- 
-const populateDictionary = () => {
+
+let dictionary = null;
+
+//Add three-letter words to dictionary, as they were omitted in first pass.
+const addThreeLetterWords = () => {
   //first, read from Unix system dictionary. 
   //use synchronous readFile operation to populate dictionary before performing operations on it. script is run to prepare database, not while game is live, so fine to block.
   const words = fs.readFileSync('./databases/words.txt', 'utf8');
@@ -29,17 +28,16 @@ const populateDictionary = () => {
   //remove words shorter than 3 letters - they will never solve a license plate.
   //WHOOPS! this also removed words with exactly 3 letters. fixing this in tweakDB.js.
   const lowerCaseRegExp = new RegExp('^[a-z]*$');
-  const dictionary = words
+  dictionary = words
     .split('\n')
-    .filter(word => lowerCaseRegExp.test(word) && word.length > 3)
+    .filter(word => lowerCaseRegExp.test(word) && word.length === 3)
 
   //for each word in the database, query the datamuse API to find out
   // - does this word exist in both dictionaries?
   // - what is its root word: itself, or a different word?
   // - what is its frequency?
-  let dictionarySlice = dictionary.slice(30000);
 
-  dictionarySlice.forEach((word) => {
+  dictionary.forEach((word) => {
     datamuse.request(`words?sp=${word}&md=df`)
       .then((resultList) => {
         //the first result is the closest match 
@@ -65,4 +63,7 @@ const populateDictionary = () => {
   });
 }
 
-module.exports = { populateDictionary };
+addThreeLetterWords();
+//Once added, re-run populateLicensePlates on licensePlates whose _ids exactly match all three letters in the three letter word - only exact matches will be affected by adding 3-letter words to dictionary.
+
+// module.exports = { dictionary };
