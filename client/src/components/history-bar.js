@@ -2,15 +2,16 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { setCurrentDetailView } from '../actions';
 
 const HistoryBar = (props) => {
 
   const renderHistory = (props) => {
     return props.game.history.map( (lp) => {
       //
-      let solution = lp.licensePlate.solutions.find( (solution) => {
-        return solution.word_id === lp.guess;
-      });
+      // let solution = lp.licensePlate.solutions.find( (solution) => {
+      //   return solution.word_id === lp.guess;
+      // });
 
       //add consecutive as a f-ing extension. this doesn't work.
 
@@ -21,10 +22,15 @@ const HistoryBar = (props) => {
       let guess = lp.guess 
         ? <span>{lp.guess.toLowerCase()}</span>
         : <span className="text-danger">skipped</span>
+
+      let letters = lp.licensePlate._id;
+
       return (
-        <div key={lp.licensePlate._id}>
-          <h3 className="d-inline">{lp.licensePlate._id.toUpperCase()}: </h3> {guess} {consecutive}
-        </div>
+        <Link key={letters} onClick={() => {props.setCurrentDetailView(lp)}} to="/detail-view/">
+          <div>
+            <h3 className="d-inline">{lp.licensePlate._id.toUpperCase()}: </h3> {guess}
+          </div>
+        </Link>
       )
     })
     .reverse();
@@ -42,11 +48,16 @@ const HistoryBar = (props) => {
 }
 
 
-function mapStateToProps(state) {
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ setCurrentDetailView }, dispatch)
+}
+
+function mapStateToProps(state, ownProps) {
   return {
+    history: ownProps.history,
     game: state.game
   }
 }
 
 
-export default connect(mapStateToProps)(HistoryBar);
+export default connect(mapStateToProps, mapDispatchToProps)(HistoryBar);

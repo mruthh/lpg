@@ -8,6 +8,7 @@ export const SET_SKIPS = "set_skips";
 export const ADJUST_SKIPS = "adjust_skips";
 export const RESET_GAME = "reset_game";
 export const UPDATE_SCORE = "update_score";
+export const SET_CURRENT_DETAIL_VIEW = "set_current_detail_view"
 
 
 const ROOT_URL = 'http://localhost:8000';
@@ -66,5 +67,13 @@ export function updateScore(solution, count){
   return {
     type: UPDATE_SCORE,
     payload: {solution, count}
+  }
+}
+
+export function setCurrentDetailView(lp){
+  //takes an object from user history
+  return {
+    type: SET_CURRENT_DETAIL_VIEW,
+    payload: lp
   }
 }
