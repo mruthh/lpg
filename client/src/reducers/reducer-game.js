@@ -66,7 +66,7 @@ export default function (state = defaultGameState, action) {
       return newState;
     }
     case (RESET_GAME): {
-      return {...state, remainingTime: 0};
+      return {...state, remainingTime: 0, score: 0};
     }
     case (UPDATE_SCORE): {
       let scoreDiff = calculateScore(action.payload);

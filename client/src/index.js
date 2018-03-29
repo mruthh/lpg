@@ -25,7 +25,7 @@ const App = () => {
     <nav className="navbar navbar-light bg-light">
     </nav>
     <nav className="navbar navbar-light bg-light">
-    <Link to="/game/"><span className="navbar-brand mb-0 h1">The License Plate Game</span></Link>
+    <Link to="/"><span className="navbar-brand mb-0 h1">The License Plate Game</span></Link>
     </nav>
     <div className="container bg-light mt-5 pt-5 pb-5 border rounded">
       <Switch>

@@ -29,6 +29,11 @@ class Puzzle extends React.Component {
     this.countdown = setInterval(this.props.adjustTime, 1000, -1000)
   }
 
+  componentWillUnmount(){
+    clearInterval(this.countdown);
+    this.props.resetGame();
+  }
+
   componentDidUpdate() {
     //clearInterval if time has reached zero
     //add less than zero check in case of bugs
@@ -128,6 +133,7 @@ class Puzzle extends React.Component {
           //can add dispatch to post history if ready
             onClick={() => {
               this.props.resetGame();
+              clearInterval(this.countdown)
             }}>
             End Game
           </button>
@@ -169,7 +175,7 @@ class Puzzle extends React.Component {
         {this.renderErrors()}
         <div className="col-md-12">
           <form className="w-100">
-            <input className="d-block w-100 mt-2 text-center" type="text"
+            <input className="d-block w-100 mt-2 text-center form-control-lg" type="text"
               value={this.state.inputWord}
               onChange={this.handleInputChange}
               disabled={this.props.settings.time === 0}
