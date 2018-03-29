@@ -1,7 +1,3 @@
-//shows the active license plate
-//current license plate needs to know its index in license plates array
-//needs to know where we are in licensePlates array
-
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';

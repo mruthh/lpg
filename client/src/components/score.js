@@ -1,33 +1,38 @@
 import React from 'react';
 import { connect } from "react-redux";
-import AnimateOnChange from 'react-animate-on-change';
-
-const Score = (props) => {
 
 
+class Score extends React.Component {
+  constructor(props) {
+    super(props);
+  }
 
-  const renderScore = (props) => {
-    let score = props.game.score.toString();
+  componentWillUpdate(){
+    this.score.className = '';
+  }
+
+  componentDidUpdate(prevProps){
+    if (prevProps.game.score !== this.props.game.score) {
+      this.score.className = 'animated pulse';
+    }
+  }
+
+  renderScore() {
+    let score = this.props.game.score.toString();
     while (score.length < 6) {
       score = '0' + score;
     }
     return score;
   }
 
-  return (
-
-    <AnimateOnChange
-      baseClassName="Score"
-      animationClassName="Score--bounce"
-      animate={props.game.scoreDiff != 0}>
-      {/* Score: {props.game.score} */}
-      <h1 className="display-4">{renderScore(props)}</h1>
-      <div className="row">
-        <div className="col-md-12 text-center">
-        </div>
+  render() {
+    return (
+      <div className="text-center text-dark">
+        <h1 ref={(score) => { this.score = score; }}>{this.renderScore()}</h1>
       </div>
-    </AnimateOnChange>
-  )
+    );
+
+  }
 }
 
 function mapStateToProps(state) {

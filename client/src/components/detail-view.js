@@ -81,12 +81,12 @@ class DetailView extends React.Component {
           <tr>
             <th scope="row"></th>
             <td>Solutions (root only)</td>
-            <td>{this.solutions.length}</td>
+            <td>{this.baseSolutionsCount}</td>
           </tr>
           <tr>
             <th scope="row"></th>
             <td>Total Solutions</td>
-            <td>{this.baseSolutionsCount}</td>
+            <td>{this.solutions.length}</td>
           </tr>
           <tr>
             <th scope="row"></th>
@@ -126,7 +126,7 @@ class DetailView extends React.Component {
             text: 'Frequency',
             position: 'outer-center',
           },
-          max: 50,
+          // max: 50,
           tick: {
             fit: false
           }
