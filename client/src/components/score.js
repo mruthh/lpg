@@ -1,7 +1,10 @@
 import React from 'react';
 import { connect } from "react-redux";
+import AnimateOnChange from 'react-animate-on-change';
 
 const Score = (props) => {
+
+
 
   const renderScore = (props) => {
     let score = props.game.score.toString();
@@ -12,11 +15,18 @@ const Score = (props) => {
   }
 
   return (
-    <div className="row">
-      <div className="col-md-12 text-center">
-        <h1 className="display-4">{renderScore(props)}</h1>
+
+    <AnimateOnChange
+      baseClassName="score"
+      animationClassName="score-bounce"
+      animate={props.game.scoreDiff != 0}>
+      Score: {props.game.score}
+      <h1 className="display-4">{renderScore(props)}</h1>
+      <div className="row">
+        <div className="col-md-12 text-center">
+        </div>
       </div>
-    </div>
+    </AnimateOnChange>
   )
 }
 

@@ -14,7 +14,8 @@ const defaultGameState = {
   history: [],
   remainingTime: 0,
   remainingSkips: 0,
-  score: 0
+  score: 0,
+  scoreDiff: 0
 };
 
 export default function (state = defaultGameState, action) {
@@ -68,7 +69,12 @@ export default function (state = defaultGameState, action) {
       return {...state, remainingTime: 0};
     }
     case (UPDATE_SCORE): {
-      return {...state, score: state.score + calculateScore(action.payload)}
+      let scoreDiff = calculateScore(action.payload);
+      return {
+        ...state, 
+        score: state.score + scoreDiff,
+        scoreDiff: scoreDiff
+      }
     }
     default: {
       return state;

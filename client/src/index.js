@@ -22,10 +22,10 @@ const store = createStoreWithMiddleware(reducers);
 const App = () => {
   return (
     <div>
-    <nav class="navbar navbar-light bg-light">
+    <nav className="navbar navbar-light bg-light">
     </nav>
-    <nav class="navbar navbar-light bg-light">
-    <Link to="/game/"><span class="navbar-brand mb-0 h1">The License Plate Game</span></Link>
+    <nav className="navbar navbar-light bg-light">
+    <Link to="/game/"><span className="navbar-brand mb-0 h1">The License Plate Game</span></Link>
     </nav>
     <div className="container bg-light mt-5 pt-5 pb-5 border rounded">
       <Switch>
