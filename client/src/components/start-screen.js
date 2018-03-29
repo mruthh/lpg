@@ -8,16 +8,18 @@ import { fetchLicensePlates } from '../actions';
 const StartScreen = (props) => {
   return (
     <div className="jumbotron">
-      <h1 className="display-4 text-center">The License Plate Game</h1>
+      <h1 className="display-3 text-center">The License Plate Game</h1>
       <div className="row">
-        <div className="col-md-4 offset-md-4">
-          <p className="lead">Take three letters.</p>
-          <p>Find a word with...</p>
-          <ol>
-            <li>those three letters</li> <li>in that order</li> <li>not necessarily together</li>
-          </ol>
+        <div className="col-md-12 text-center">
+          <h2 className="lead">Take three letters.</h2>
+          <p className="mt-5">Find a word with...</p>
+          <ul className="list-inline">
+            <li className="list-inline-item">those three letters</li> 
+            <li className="list-inline-item">&#8226; in that order &#8226;</li> 
+            <li className="list-inline-item">not necessarily together</li>
+          </ul>
           <Link className="link" to="/game/">
-            <button className="btn btn-lg btn-block text-center" onClick={() => props.fetchLicensePlates(props.settings.gameSize)}>
+            <button className="btn btn-lg btn-block btn-primary text-center" onClick={() => props.fetchLicensePlates(props.settings.gameSize)}>
               Start Game
             </button>
           </Link>

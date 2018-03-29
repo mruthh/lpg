@@ -11,6 +11,15 @@ const GameAssets = (props) => {
     return `${minutes}:${seconds}`
   }
 
+  const renderTime = (props) => {
+    if (!props.game.remainingTime || props.game.remainingTime > 10 * 1000) {
+      return <h1 className="display-4 text-right">{convertMilliseconds(props.game.remainingTime)}</h1>;
+    } else {
+      return <h1 className="display-4 text-right text-danger">{convertMilliseconds(props.game.remainingTime)}</h1>
+    }
+
+  }
+
   const renderScore = (props) => {
     let score = props.game.score.toString();
     while (score.length < 6) {
@@ -30,8 +39,9 @@ const GameAssets = (props) => {
   return (
     <div>
       <div className="row">
-        <div className="col-md-12 text-left">
-        <h1 className="display-4 text-right">{convertMilliseconds(props.game.remainingTime)}</h1>
+        <div className="col-md-12">
+        <p className="display-4 float-left">Time:</p>
+        {renderTime(props)}
         </div>
       </div>
       <div className="row">

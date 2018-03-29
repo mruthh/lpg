@@ -77,3 +77,4 @@ export function setCurrentDetailView(lp){
     payload: lp
   }
 }
+

@@ -104,7 +104,7 @@ class Puzzle extends React.Component {
     if (this.props.game.currentLicensePlate) {
       return (
         <div className="col-md-12">
-          <h1 className="text-center d-block">
+          <h1 className="text-center display-1 d-block">
           {this.props.game.currentLicensePlate._id.toUpperCase()}
           </h1>
           <p className="text-center d-block">
@@ -122,12 +122,28 @@ class Puzzle extends React.Component {
       return (
         <div className ="col-md-12 text-center">
           <button 
-            className="btn btn-block mt-5"
+            className="btn btn-block btn-lg mt-5"
           //can add dispatch to post history if ready
             onClick={() => {
               this.props.resetGame();
             }}>
-            Quit Game
+            End Game
+          </button>
+        </div>
+      )
+    } else {
+      return (
+        <div className ="col-md-12 text-center">
+          <button 
+            className="btn btn-block btn-lg mt-5"
+          //can add dispatch to post history if ready
+            onClick={() => {
+              this.props.fetchLicensePlates(this.props.settings.gameSize);
+              this.props.setTime(this.props.settings.maxTime);
+              this.props.setSkips(this.props.settings.maxSkips);
+              this.countdown = setInterval(this.props.adjustTime, 1000, -1000)
+            }}>
+            Restart Game
           </button>
         </div>
       )
@@ -149,7 +165,6 @@ class Puzzle extends React.Component {
         <div className="row">
         {this.renderLicensePlates()}
         {this.renderErrors()}
-        {this.renderBonuses()}
         <div className="col-md-12">
           <form className="w-100">
             <input className="d-block w-100 mt-2 text-center" type="text"

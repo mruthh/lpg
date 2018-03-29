@@ -21,7 +21,14 @@ const store = createStoreWithMiddleware(reducers);
 
 const App = () => {
   return (
-    <div className="container white-box mt-5 p-5">
+    <div>
+    <nav class="navbar navbar-light bg-light">
+      {/* <a class="navbar-brand" href="#">The License Plate Game</a> */}
+    </nav>
+    <nav class="navbar navbar-light bg-light">
+      <span class="navbar-brand mb-0 h1">The License Plate Game</span>
+    </nav>
+    <div className="container bg-light mt-5 pt-5 pb-5 border rounded">
       <Switch>
         <Route path="/chart" component={ChartLength} />
         <Route exact path="/" component={StartScreen} />
@@ -30,7 +37,7 @@ const App = () => {
             <div className="col-md-4">
               <HistoryBar />
             </div>
-            <div className="col-md-4">
+            <div className="col-md-4 border-left border-right border-dark">
               <Score />
               <Puzzle />
             </div>
@@ -43,6 +50,7 @@ const App = () => {
           <DetailView />
         </Route>
       </Switch>
+    </div>
     </div>
   )
 }

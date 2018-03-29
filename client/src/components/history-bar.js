@@ -26,7 +26,7 @@ const HistoryBar = (props) => {
       let letters = lp.licensePlate._id;
 
       return (
-        <Link key={letters} onClick={() => {props.setCurrentDetailView(lp)}} to="/detail-view/">
+        <Link key={letters} className="link" onClick={() => {props.setCurrentDetailView(lp)}} to="/detail-view/">
           <div>
             <h3 className="d-inline">{lp.licensePlate._id.toUpperCase()}: </h3> {guess}
           </div>
@@ -38,7 +38,7 @@ const HistoryBar = (props) => {
 
   return (
     <div>
-      <h2>Guess History</h2>
+      <h1 className="text-bold">Guess History</h1>
       <p>Click on a guess to learn more.</p>
       {renderHistory(props)}
     </div>
