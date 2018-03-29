@@ -1,5 +1,5 @@
 import { makeQueue } from '../oldLPG/main';
-import { ADJUST_TIME, SET_TIME, FETCH_LICENSE_PLATES, MOVE_TO_NEXT_LICENSE_PLATE, ADJUST_SKIPS, SET_SKIPS, UPDATE_SCORE, RESET_GAME } from '../actions';
+import { ADJUST_TIME, SET_TIME, FETCH_LICENSE_PLATES, MOVE_TO_NEXT_LICENSE_PLATE, ADJUST_SKIPS, SET_SKIPS, UPDATE_SCORE, RESET_GAME, RESTART_GAME } from '../actions';
 import calculateScore from './calculate-score';
 
 const defaultLicensePlates = {
@@ -14,7 +14,8 @@ const defaultGameState = {
   history: [],
   remainingTime: 0,
   remainingSkips: 0,
-  score: 0
+  score: 0,
+  scoreDiff: 0
 };
 
 export default function (state = defaultGameState, action) {
@@ -39,6 +40,8 @@ export default function (state = defaultGameState, action) {
           currentLicensePlate: action.payload.data[0], 
           queue: action.payload.data.slice(1)
         }
+      } else {
+        return state;
       }
     }
     case (MOVE_TO_NEXT_LICENSE_PLATE): {
@@ -63,10 +66,15 @@ export default function (state = defaultGameState, action) {
       return newState;
     }
     case (RESET_GAME): {
-      return defaultGameState;
+      return {...state, remainingTime: 0};
     }
     case (UPDATE_SCORE): {
-      return {...state, score: state.score + calculateScore(action.payload)}
+      let scoreDiff = calculateScore(action.payload);
+      return {
+        ...state, 
+        score: state.score + scoreDiff,
+        scoreDiff: scoreDiff
+      }
     }
     default: {
       return state;

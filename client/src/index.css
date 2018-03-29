@@ -10,6 +10,14 @@ body {
   background-color: white;
 }
 
-div {
+/* div {
   border: 1px solid blueviolet;
+} */
+
+.link {
+  text-decoration: none !important;
+}
+
+.blue-button {
+  background-color: #3188c6;
 }

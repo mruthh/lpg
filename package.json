@@ -17,13 +17,20 @@
   },
   "homepage": "https://github.com/mruthh/lpg#readme",
   "dependencies": {
+    "@fortawesome/fontawesome": "^1.1.5",
+    "@fortawesome/react-fontawesome": "0.0.18",
     "body-parser": "^1.18.2",
+    "c3": "^0.5.1",
     "cors": "^2.8.4",
     "datamuse": "^1.0.5",
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
+    "font-awesome": "^4.7.0",
     "js-combinatorics": "^0.5.3",
     "mongoose": "^5.0.11",
+    "react-animate-on-change": "^1.0.1",
+    "react-c3js": "^0.1.20",
+    "react-router-dom": "^4.2.2",
     "winston": "^2.4.1"
   }
 }

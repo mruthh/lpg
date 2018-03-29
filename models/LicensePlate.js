@@ -17,7 +17,11 @@ const SolutionSchema = new Schema({
   isRoot: Boolean,
   frequency: Number,
   frequencyRank: Number,
-  lengthRank: Number
+  lengthRank: Number,
+  isShortest: Boolean,
+  isLongest: Boolean,
+  isRarest: Boolean,
+  isCommonest: Boolean
 });
 
 const LicensePlateSchema = new Schema({
