@@ -23,7 +23,7 @@ class DetailView extends React.Component {
 
   calculateLengthData() {
     let lengthData = this.solutions
-      .filter(solution => solution.isRoot)
+      .filter(solution => solution.isRoot || solution.word._id === this.guess)
       .map((solution) => {
         return [solution.word._id, solution.word._id.length]
       })
@@ -49,7 +49,7 @@ class DetailView extends React.Component {
 
   calculateFreqData() {
     let freqData = this.solutions
-      .filter(solution => solution.isRoot)
+      .filter(solution => solution.isRoot || solution.word._id === this.guess)
       .map((solution) => {
         return [solution.word._id + '_x', solution.word.frequency]
       })
@@ -59,7 +59,7 @@ class DetailView extends React.Component {
   generateXs() {
     let xs = {};
     this.solutions.forEach((solution) => {
-      if (solution.isRoot) {
+      if (solution.isRoot || solution.word._id === this.guess) {
         xs[solution.word._id] = solution.word._id + '_x';
       }
     })
@@ -159,17 +159,17 @@ class DetailView extends React.Component {
     if (!this.props.lp.licensePlate) return null;
     
     let solutionIsCircled = this.guess 
-      ? <p className="text-center">Your solution is circled.</p>
+      ? <span className="text-center">Your solution is circled.</span>
       : null;
     return (
       <div>
-        <div>
           <Link to="/game/">
-            <button className="btn btn-dark float-left ml-3">Back</button>
+            <button className="btn btn-dark ml-3">Back</button>
           </Link>
-          <h1 className="display-4 text-center">Stats for {this.letters.toUpperCase()}</h1>
-          <p class="h6 text-center">Each dot in the chart below is a word that solves <strong>{this.letters.toUpperCase()}</strong>.</p> 
-          {solutionIsCircled}
+        <h1 className="display-4 text-center">Stats for {this.letters.toUpperCase()}</h1>
+        <div>
+          <p class="h6 text-center">Each dot in the chart below is a word that solves <strong>{this.letters.toUpperCase()}</strong>. {solutionIsCircled}</p> 
+
           <p className="text-center">Shorter words are further down. More common words are to the right. Hover over a dot to learn more.</p>
         </div>
         <div className="float-right">{this.renderStats()}</div>
