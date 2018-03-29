@@ -25,7 +25,7 @@ class Puzzle extends React.Component {
     this.countdown = setInterval(this.props.adjustTime, 1000, -1000)
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     clearInterval(this.countdown);
     this.props.resetGame();
   }
@@ -50,10 +50,10 @@ class Puzzle extends React.Component {
     let currentLicensePlate = this.props.game.currentLicensePlate;
     let validSolution = currentLicensePlate.solutions.find((solution) => {
       return solution.word._id === sanitizedInputWord
-    }) 
+    })
     if (validSolution) {
       if (validSolution.consecutive) {
-        this.setState({bonuses: [...[this.state.bonuses], 'consecutive']})
+        this.setState({ bonuses: [...[this.state.bonuses], 'consecutive'] })
       }
       this.props.updateScore(validSolution, this.props.game.currentLicensePlate.baseSolutionsCount);
       this.props.moveToNextLicensePlate({
@@ -81,52 +81,52 @@ class Puzzle extends React.Component {
     this.wordInput.focus()
     this.setState({ inputWord: '' })
   }
-  renderBonuses(){
-    if (this.state.bonuses.length){
-      let bonuses = this.state.bonuses.map( (bonus) => {
+  renderBonuses() {
+    if (this.state.bonuses.length) {
+      let bonuses = this.state.bonuses.map((bonus) => {
         return <span className="text-primary text-bold"> *{bonus}*</span>
       })
     } else {
       return null;
     }
   }
-  
+
   renderErrors() {
     if (this.state.error) {
       return (
-          <div className="col-md-12 text-center text-danger">
-            {this.state.error}
-          </div>
-      )
-    } else {
-      return null;
-    }
-  }
-  
-  renderLicensePlates(){
-    if (this.props.game.currentLicensePlate) {
-      return (
-        <div className="col-md-12">
-          <h1 className="text-center display-1 d-block">
-          {this.props.game.currentLicensePlate._id.toUpperCase()}
-          </h1>
-          <p className="text-center d-block">
-            Possible Solutions: {this.props.game.currentLicensePlate.baseSolutionsCount}
-          </p>
-      </div>
+        <div className="col-md-12 text-center text-danger">
+          {this.state.error}
+        </div>
       )
     } else {
       return null;
     }
   }
 
-  renderQuitButton(){
+  renderLicensePlates() {
+    if (this.props.game.currentLicensePlate) {
+      return (
+        <div className="col-md-12">
+          <h1 className="text-center display-1 d-block">
+            {this.props.game.currentLicensePlate._id.toUpperCase()}
+          </h1>
+          <p className="text-center d-block">
+            Possible Solutions: {this.props.game.currentLicensePlate.baseSolutionsCount}
+          </p>
+        </div>
+      )
+    } else {
+      return null;
+    }
+  }
+
+  renderQuitButton() {
     if (this.props.game.remainingTime) {
       return (
-        <div className ="col-md-12 text-center">
-          <button 
+        <div className="col-md-12 text-center">
+          <button
             className="btn btn-block btn-lg btn-secondary mt-5"
-          //can add dispatch to post history if ready
+            //can add dispatch to post history if ready
             onClick={() => {
               this.props.resetGame();
               clearInterval(this.countdown)
@@ -137,10 +137,10 @@ class Puzzle extends React.Component {
       )
     } else {
       return (
-        <div className ="col-md-12 text-center">
-          <button 
+        <div className="col-md-12 text-center">
+          <button
             className="btn btn-block btn-lg btn-secondary mt-5"
-          //can add dispatch to post history if ready
+            //can add dispatch to post history if ready
             onClick={() => {
               this.props.fetchLicensePlates(this.props.settings.gameSize);
               this.props.setTime(this.props.settings.maxTime);
@@ -154,6 +154,31 @@ class Puzzle extends React.Component {
     }
   }
 
+  renderGameOver() {
+    return (
+      <div>
+        <div className="col-md-12">
+          <h1 className="text-center display-1 d-block">
+            Game Over
+        </h1>
+        </div>
+        <div className="col-md-12 text-center">
+          <button
+            className="btn btn-block btn-lg btn-secondary mt-5"
+            //can add dispatch to post history if ready
+            onClick={() => {
+              this.props.fetchLicensePlates(this.props.settings.gameSize);
+              this.props.setTime(this.props.settings.maxTime);
+              this.props.setSkips(this.props.settings.maxSkips);
+              this.countdown = setInterval(this.props.adjustTime, 1000, -1000)
+            }}>
+            Restart Game
+        </button>
+        </div>
+      </div>
+    )
+  }
+
   render() {
 
     const solveStyle = {
@@ -163,10 +188,15 @@ class Puzzle extends React.Component {
       backgroundColor: '#f6815e'
     };
 
-
-
+    // if (!this.props.game.remainingTime) {
+    //   return (
+    //     <div className="row">
+    //       {this.renderGameOver()}
+    //     </div>
+    //   )
+    // } else {
     return (
-        <div className="row">
+      <div className="row">
         {this.renderLicensePlates()}
         {this.renderErrors()}
         <div className="col-md-12">

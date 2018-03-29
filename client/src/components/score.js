@@ -27,7 +27,7 @@ class Score extends React.Component {
 
   render() {
     return (
-      <div className="text-center text-">
+      <div className="text-center">
         <h1 ref={(score) => { this.score = score; }}>{this.renderScore()}</h1>
       </div>
     );
