@@ -32,7 +32,10 @@ const ChartLength = (props) => {
     }
   };
 
-  return <C3Chart data={ {columns: chartData.line} }/>
+  return props.lp.licensePlate 
+    ? <LineChart data={chartData.line}/>
+    : null;
+  
 };
 
  

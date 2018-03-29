@@ -13,8 +13,8 @@ import GameAssets from './components/game-assets';
 import StartScreen from './components/start-screen';
 import HistoryBar from './components/history-bar';
 import DetailView from './components/detail-view';
-import ChartLength from './components/chart-length'
-
+import ChartLength from './components/chart-length';
+import Score from './components/score';
 const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
 
 const store = createStoreWithMiddleware(reducers);
@@ -31,7 +31,7 @@ const App = () => {
               <HistoryBar />
             </div>
             <div className="col-md-4">
-              <GameAssets />
+              <Score />
               <Puzzle />
             </div>
           </div>
@@ -52,3 +52,4 @@ ReactDOM.render(
     </BrowserRouter>
   </Provider>,
   document.getElementById('root'));
+

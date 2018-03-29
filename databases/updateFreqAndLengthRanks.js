@@ -3,19 +3,31 @@ const mongoose = require('mongoose');
 const Word = require('../models/Word');
 const LicensePlate = require('../models/LicensePlate');
 const LicensePlateSchema = require('../models/LicensePlate');
-
+const winston = require('winston');
 mongoose.connect('mongodb://127.0.0.1/lpg', { poolSize: 10, bufferMaxEntries: 0 });
 mongoose.set('debug', true);
 
-
+winston.add(
+  winston.transports.File, {
+    filename: './databases/updateErrors.log',
+    level: 'info',
+    json: true,
+    timestamp: true
+  }
+);
+ 
 //Find all items. Rerun length and frequency sorts. Save.
 //Also run checks for "is shortest, is longest, is rarest, is commonest"
 
-LicensePlate.find().exec( (err, data) => {
-  data.slice(0,1000).forEach( (lp, index) => {
-    console.log(lp)
+LicensePlate.find()
+//last completed was item 3000.
+.limit(500)
+.skip(2500)
+.exec( (err, data) => {
+  data.forEach( (lp, index) => {
     //add "is shortest, is longest, is rarest, is commonest" boolean properties to each lp.
-
+    console.log(`processing ${lp._id}, ${index} of ${data.length}`)
+    
     lp.solutions.forEach( (solution) => {
       solution.isShortest = false,
       solution.isLongest = false,
@@ -26,6 +38,15 @@ LicensePlate.find().exec( (err, data) => {
     
     //helper function to re-run frequency and length sorts
     const sortAndCompare = (propertyToCompare, lowProperty, highProperty, rankName) => {
+      //if there is only one item, it has all of these properties and no sort is necessary.
+      if (lp.solutions.length === 1) {
+        let solution = lp.solutions[0];
+        solution.isShortest = true;
+        solution.isLongest = true;
+        solution.isRarest = true;
+        solution.isCommonest = true;
+        return;
+      }
       const getPropertyToCompare = (solution, propertyToCompare) => {
         if (propertyToCompare === 'frequency') {
           return solution.word.frequency;
@@ -64,8 +85,10 @@ LicensePlate.find().exec( (err, data) => {
       sortAndCompare('frequency', 'isRarest', 'isCommonest', 'frequencyRank');
       lp.save( (err, res) => {
         if (err) throw err;
-        console.log(`saving ${lp._id}, ${index} of ${data.length}`)
+        console.log(`saved ${lp._id}, ${index} of ${data.length}`)
       })
+    } else {
+      console.log(`no solutions for ${lp}. no updates needed.`)
     }
   });
 });
