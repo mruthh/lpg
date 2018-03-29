@@ -19,7 +19,8 @@ const StartScreen = (props) => {
             <li className="list-inline-item">not necessarily together</li>
           </ul>
           <Link className="link" to="/game/">
-            <button className="btn btn-lg btn-block btn-primary text-center" onClick={() => props.fetchLicensePlates(props.settings.gameSize)}>
+            <button className="btn btn-lg btn-block btn-primary text-center"> 
+              {/* onClick={() => props.fetchLicensePlates(props.settings.gameSize)} */}
               Start Game
             </button>
           </Link>

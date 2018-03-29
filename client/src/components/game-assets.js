@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from "react-redux";
+// import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+// import faChevron from '@fortawesome/fontawesome-free-solid'
 
 const GameAssets = (props) => {
 
