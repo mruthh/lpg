@@ -21,8 +21,8 @@ winston.add(
 
 LicensePlate.find()
 //last completed was item 3000.
-.limit(500)
-.skip(2500)
+.limit()
+.skip(3000)
 .exec( (err, data) => {
   data.forEach( (lp, index) => {
     //add "is shortest, is longest, is rarest, is commonest" boolean properties to each lp.

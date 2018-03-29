@@ -15,42 +15,53 @@ class DetailView extends React.Component {
       this.guess = props.lp.guess;
       this.solutions = props.lp.licensePlate.solutions;
     }
-    // this.data = {
-    //   columns: [
-    //     ['data1', 30, 200, 100, 400, 150, 250],
-    //     ['data2', 50, 20, 10, 40, 15, 25],
-    //     ['data', 30, 200, 100, 400, 150, 250],
-    //     ['dat2', 50, 20, 10, 40, 15, 25],
-    //     ['daa1', 30, 200, 100, 400, 150, 250],
-    //     ['dta2', 50, 20, 10, 40, 15, 25],
-    //     ['ata1', 30, 200, 100, 400, 150, 250],
-    //     ['sdgdata2', 50, 20, 10, 40, 15, 25],
-    //     ['datsdga1', 30, 200, 100, 400, 150, 250],
-    //     ['data2e', 50, 20, 10, 40, 15, 25],
-
-    //   ]
-    // };
   }
   componentDidMount() {
     this.renderChart();
   }
 
   calculateLengthData(){
-    // return this.solutions.map( (solution) => {
-    //   return [solution.word._id, solution.word._id.length]
-    // });
-    let words_x = ['Words'];
-    let lengths = ['Length'];
+    let lengthData = this.solutions.map( (solution) => {
+      return [solution.word._id, solution.word._id.length]
+    })
+    return lengthData;
+  }
+
+  generateDefaultData(){
+    return {    
+    xs: {
+        dog: 'dog_l',
+        doggone: 'doggone_l'
+      },
+        //dog, length 3, frequency 10
+      //doggone, length 7, frequency 1
+      columns: [
+        ["dog_l", 3],
+        ['doggone_l', 7],
+        ['dog', 10],
+        ['doggone', 1]
+      ]
+    }
+    }
+
+  calculateFreqData(){
+    let freqData = this.solutions.map( (solution) => {
+      return [solution.word._id + '_x', solution.word.frequency]
+    })
+    return freqData;
+  }
+
+  generateXs(){
+    let xs = {};
     this.solutions.forEach( (solution) => {
-      words_x.push(solution.word._id);
-      lengths.push(solution.word._id.length);
-    });
-    console.log([lengths, words_x])
-    return [lengths, words_x ];
+      xs[solution.word._id] = solution.word._id  + '_x';
+    })
+    return xs;
   }
 
   renderChart(){
-    console.log(this.solutions.length)
+    const lengthData = this.calculateLengthData();
+    const freqData = this.calculateFreqData();
     const chart = c3.generate({
       bindto: '#chart',
       size: {
@@ -58,21 +69,32 @@ class DetailView extends React.Component {
         width: 960
     },
     type: 'scatter',
-      data: {columns: this.calculateLengthData()},
+      data: 
+      {
+        xs: this.generateXs(),
+
+        columns: [...lengthData, ...freqData]
+      },
       legend: {
         show: false
       },
-      // groups: ['words'],
-      // bar: {
-      //   width: 200
-      // },
+      tooltip: {
+        grouped: false
+      },
       axis: {
         x: {
-          label: 'Length'
+          label: 'Frequency',
+
+          tick: {
+            fit: false
+          }
         },
         y: {
-          label: 'Words'
+          label: 'Length'
         }
+      },
+      point: {
+        r: 5
       }
     });
   }

@@ -17,10 +17,10 @@ const Score = (props) => {
   return (
 
     <AnimateOnChange
-      baseClassName="score"
-      animationClassName="score-bounce"
+      baseClassName="Score"
+      animationClassName="Score--bounce"
       animate={props.game.scoreDiff != 0}>
-      Score: {props.game.score}
+      {/* Score: {props.game.score} */}
       <h1 className="display-4">{renderScore(props)}</h1>
       <div className="row">
         <div className="col-md-12 text-center">

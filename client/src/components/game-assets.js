@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from "react-redux";
-// import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-// import faChevron from '@fortawesome/fontawesome-free-solid'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import faChevron from '@fortawesome/fontawesome-free-solid/faChevronCircleRight';
+import faBan from '@fortawesome/fontawesome-free-solid/faBan';
 
 const GameAssets = (props) => {
 
@@ -32,11 +33,18 @@ const GameAssets = (props) => {
 
   const renderSkips = (props) => {
     let skips = [];
-    let singleSkip = 'skip';
-    for (let i = 0; i < props.game.remainingSkips; i++) {
-      skips.push(<span key={i}> {singleSkip} </span>);
+    let singleSkip = <FontAwesomeIcon icon={faChevron} />;
+    let emptySkip = <FontAwesomeIcon icon={faBan} />
+    for (let i = 0; i < props.settings.maxSkips; i++) {
+      let remainingSkips = props.game.remainingSkips;
+      if (remainingSkips > i) {
+        skips.unshift(<span key={i}> {singleSkip} </span>);
+      } else {
+        skips.unshift(<span key={i}> {emptySkip} </span>);
+      }
+
     }
-    return skips.length ? skips : <span>No Skips Remaining</span>
+    return skips;
   }
   return (
     <div>
@@ -48,7 +56,7 @@ const GameAssets = (props) => {
       </div>
       <div className="row">
         <div className="col-md-12 text-left">
-        {renderSkips(props)}
+        <p className="float-left display-4">Skips:</p> <span className="float-right fa-2x">{renderSkips(props)}</span>
         </div>
       </div>
       </div>
@@ -56,7 +64,7 @@ const GameAssets = (props) => {
   }
   
 function mapStateToProps(state){
-  return {game: state.game }
+  return {game: state.game, settings: state.settings }
     }
     
 export default connect(mapStateToProps)(GameAssets);
