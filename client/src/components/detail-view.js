@@ -36,32 +36,44 @@ class DetailView extends React.Component {
   }
 
   calculateLengthData(){
-    return this.solutions.map( (solution) => {
-      return [solution.word._id, solution.word._id.length]
+    // return this.solutions.map( (solution) => {
+    //   return [solution.word._id, solution.word._id.length]
+    // });
+    let words_x = ['Words'];
+    let lengths = ['Length'];
+    this.solutions.forEach( (solution) => {
+      words_x.push(solution.word._id);
+      lengths.push(solution.word._id.length);
     });
+    console.log([lengths, words_x])
+    return [lengths, words_x ];
   }
 
   renderChart(){
+    console.log(this.solutions.length)
     const chart = c3.generate({
       bindto: '#chart',
       size: {
-        height: 240,
-        width: 480
-    },
-    xs: {
-      //the list of words
+        height: 480,
+        width: 960
     },
     type: 'scatter',
       data: {columns: this.calculateLengthData()},
+      legend: {
+        show: false
+      },
+      // groups: ['words'],
+      // bar: {
+      //   width: 200
+      // },
       axis: {
         x: {
-            label: 'Sepal.Width',
-  
+          label: 'Length'
         },
         y: {
-            label: 'Length'
+          label: 'Words'
         }
-    }
+      }
     });
   }
 

@@ -16,7 +16,7 @@ const StartScreen = (props) => {
           <ol>
             <li>those three letters</li> <li>in that order</li> <li>not necessarily together</li>
           </ol>
-          <Link to="/game/">
+          <Link className="link" to="/game/">
             <button className="btn btn-lg btn-block text-center" onClick={() => props.fetchLicensePlates(props.settings.gameSize)}>
               Start Game
             </button>

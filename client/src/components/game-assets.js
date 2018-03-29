@@ -30,8 +30,9 @@ const GameAssets = (props) => {
   return (
     <div>
       <div className="row">
-        <div className="col-md-6 text-left">{convertMilliseconds(props.game.remainingTime)}</div>
-        <div className="col-md-6 text-right">{renderScore(props)}</div>
+        <div className="col-md-12 text-left">
+        <h1 className="display-4 text-right">{convertMilliseconds(props.game.remainingTime)}</h1>
+        </div>
       </div>
       <div className="row">
         <div className="col-md-12 text-left">

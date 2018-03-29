@@ -34,6 +34,9 @@ const App = () => {
               <Score />
               <Puzzle />
             </div>
+            <div className="col-md-4">
+              <GameAssets />
+            </div>
           </div>
         </Route>
         <Route path="/detail-view">
