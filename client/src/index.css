@@ -15,6 +15,10 @@ body {
   background-color: #3188c6;
 }
 
+.pulse {
+  color: green;
+  font-size: 36;
+}
 /* 
 .Score {
   background-color: #000;

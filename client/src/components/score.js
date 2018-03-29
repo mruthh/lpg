@@ -12,7 +12,7 @@ class Score extends React.Component {
   }
 
   componentDidUpdate(prevProps){
-    if (prevProps.game.score !== this.props.game.score) {
+    if (this.props.game.score && prevProps.game.score !== this.props.game.score) {
       this.score.className = 'animated pulse';
     }
   }
@@ -27,7 +27,7 @@ class Score extends React.Component {
 
   render() {
     return (
-      <div className="text-center text-dark">
+      <div className="text-center text-">
         <h1 ref={(score) => { this.score = score; }}>{this.renderScore()}</h1>
       </div>
     );

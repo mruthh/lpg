@@ -1,8 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { adjustTime, setTime, adjustSkips, setSkips, updateScore, fetchLicensePlates, moveToNextLicensePlate, resetGame } from '../actions';
-import Chart from './chart';
+import { Link } from 'react-router-dom';
 import c3 from 'c3';
 
 class DetailView extends React.Component {
@@ -16,6 +15,7 @@ class DetailView extends React.Component {
       this.guess = props.lp.guess;
       this.solutions = props.lp.licensePlate.solutions;
     }
+    this.selectGuess = this.selectGuess.bind(this);
   }
   componentDidMount() {
     this.renderChart();
@@ -76,26 +76,30 @@ class DetailView extends React.Component {
     return (
       <table class="table">
         <thead>
+        <tr>
+          <td className="text-center h6 table-primary" colspan="2">How Did You Do?</td>
+        </tr>
         </thead>
         <tbody>
           <tr>
-            <th scope="row"></th>
+            <td><strong>Your Solution</strong></td>
+            <td><strong>{this.renderGuess()}</strong></td>
+          </tr>
+          <tr>
             <td>Solutions (root only)</td>
             <td>{this.baseSolutionsCount}</td>
           </tr>
           <tr>
-            <th scope="row"></th>
             <td>Total Solutions</td>
             <td>{this.solutions.length}</td>
           </tr>
-          <tr>
-            <th scope="row"></th>
-            <td>Your Solution</td>
-            <td><strong>{this.guess.toUpperCase()}</strong></td>
-          </tr>
+
         </tbody>
       </table>
     )
+  }
+  selectGuess(){
+    this.chart.select([this.guess])
   }
 
   renderChart() {
@@ -110,6 +114,9 @@ class DetailView extends React.Component {
       type: 'scatter',
       data:
         {
+          selection: {
+            enabled: true
+          },
           xs: this.generateXs(),
 
           columns: [...lengthData, ...freqData]
@@ -126,7 +133,6 @@ class DetailView extends React.Component {
             text: 'Frequency',
             position: 'outer-center',
           },
-          // max: 50,
           tick: {
             fit: false
           }
@@ -139,7 +145,8 @@ class DetailView extends React.Component {
         r: 5
       }
     });
-  }
+    chart.select([this.guess]);
+ }
 
   renderGuess() {
     return this.guess
@@ -150,10 +157,20 @@ class DetailView extends React.Component {
 
   render() {
     if (!this.props.lp.licensePlate) return null;
+    
+    let solutionIsCircled = this.guess 
+      ? <p className="text-center">Your solution is circled.</p>
+      : null;
     return (
       <div>
         <div>
-          <h1 className="display-4 text-center">Details for {this.letters.toUpperCase()}</h1>
+          <Link to="/game/">
+            <button className="btn btn-dark float-left ml-3">Back</button>
+          </Link>
+          <h1 className="display-4 text-center">Stats for {this.letters.toUpperCase()}</h1>
+          <p class="h6 text-center">Each dot in the chart below is a word that solves <strong>{this.letters.toUpperCase()}</strong>.</p> 
+          {solutionIsCircled}
+          <p className="text-center">Shorter words are further down. More common words are to the right. Hover over a dot to learn more.</p>
         </div>
         <div className="float-right">{this.renderStats()}</div>
         <div className="row" id="chart">
@@ -162,16 +179,6 @@ class DetailView extends React.Component {
     )
   }
 }
-
-{/* <div className="row">
-          <div className="col-md-3 offset-md-3 text-center lead">
-            <p>Possible solutions: {this.baseSolutionsCount}</p>
-          </div>
-          <div className="col-md-3 text-center lead">
-            <p>Your solution: <span className="text-bold"> {this.renderGuess()}</span></p>
-          </div>
-        </div> */}
-
 
 function mapStateToProps(state) {
   return {

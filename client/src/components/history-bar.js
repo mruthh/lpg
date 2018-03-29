@@ -8,17 +8,6 @@ const HistoryBar = (props) => {
 
   const renderHistory = (props) => {
     return props.game.history.map( (lp) => {
-      //
-      // let solution = lp.licensePlate.solutions.find( (solution) => {
-      //   return solution.word_id === lp.guess;
-      // });
-
-      //add consecutive as a f-ing extension. this doesn't work.
-
-      // let consecutive = solution && solution.consecutive
-      //   ? <span className ="float-right text-primary">consecutive!</span>
-      //   : null;
-
       let guess = lp.guess 
         ? <span>{lp.guess.toLowerCase()}</span>
         : <span className="text-danger">skipped</span>
@@ -39,7 +28,7 @@ const HistoryBar = (props) => {
   return (
     <div>
       <h1 className="text-bold">Guess History</h1>
-      <p>Click on a guess to learn more.</p>
+      <p>Click on a guess for details.</p>
       {renderHistory(props)}
     </div>
 

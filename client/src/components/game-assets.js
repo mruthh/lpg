@@ -33,8 +33,14 @@ const GameAssets = (props) => {
 
   const renderSkips = (props) => {
     let skips = [];
-    let singleSkip = <FontAwesomeIcon icon={faChevron} />;
-    let emptySkip = <FontAwesomeIcon icon={faBan} />
+    const skipStyle = {
+      color: '#54cabe'
+    };
+    const emptySkipStyle = {
+      color: '#f6815e'
+    };
+    let singleSkip = <FontAwesomeIcon icon={faChevron} style={skipStyle}/>;
+    let emptySkip = <FontAwesomeIcon icon={faBan} style={emptySkipStyle}/>
     for (let i = 0; i < props.settings.maxSkips; i++) {
       let remainingSkips = props.game.remainingSkips;
       if (remainingSkips > i) {

@@ -4,7 +4,7 @@ const defaultSettings = {
   maxTime: 60 * 1000,
   difficulty: 'medium',
   maxSkips: 3,
-  gameSize: 10
+  gameSize: 20
 }
 
 
