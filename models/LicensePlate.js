@@ -1,3 +1,6 @@
+
+//note: in the populate feature branch, this model is deprecated. LP is the updated model for license plates.
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const WordSchema = require('../models/Word');
