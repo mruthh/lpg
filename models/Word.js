@@ -8,6 +8,7 @@ const Schema = mongoose.Schema;
 
 const WordSchema = new Schema({
   _id: String,
+  name: String,
   rootWord: String,
   frequency: Number
 });

@@ -2,10 +2,13 @@
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const WordSchema = require('../models/Word');
+const WordSchema = require('./Word');
+const Word = require('./Word');
 
 const LPSchema = new Schema({
-  _id: String,
-  solutions: [{type: Schema.Types.ObjectId, ref: Word}],
+  letters: String,
+  solutions: [{type: Schema.Types.ObjectId, ref: 'word'}],
   baseSolutionsCount: Number
 });
+
+module.exports = mongoose.model('LP', LPSchema);
