@@ -4,7 +4,7 @@
   "description": "license plate game",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -35,5 +35,10 @@
     "passport-google-oauth": "^1.0.0",
     "react-router-dom": "^4.2.2",
     "winston": "^2.4.1"
+  },
+  "devDependencies": {
+    "chai": "*",
+    "mocha": "*"
   }
+
 }

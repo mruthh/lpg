@@ -65,4 +65,4 @@ const populateDictionary = () => {
   });
 }
 
-module.exports = { populateDictionary };
+module.exports = populateDictionary;
