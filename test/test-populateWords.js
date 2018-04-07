@@ -1,7 +1,7 @@
 const chai = require('chai');
 const expect = require('chai').expect;
 
-const {getWordsFromDictionary, getFreqAndRootWords, saveWordsToDb } = require('../db-bdd/populateWords');
+const {getWordsFromDictionary, getFreqAndRootWords, saveWordToDb } = require('../db-bdd/populateWords');
 
 const testDictionary = 'Arrow\ndog\ndog\'s\nmoon\ntweet\npi';
 
@@ -14,7 +14,7 @@ describe('getWordsFromDictionary', function(){
  
   it('returns an array of words', function(){
     expect(words).to.be.an('array');
-    // expect(words).to.all.be.a('string'); <-- this one gives strange failure msg    
+    expect(words).to.all.satisfy(word => typeof word === 'string');
     expect(words).to.contain('dog');
     expect(words).to.contain('tweet');
   });
@@ -33,3 +33,12 @@ describe('getWordsFromDictionary', function(){
 
 });
 
+describe('getFreqAndRootWords', function(){
+  const dogWithFreqAndRoot = getFreqAndRootWords('dog');
+  it('returns an object with rootWord, name, and frequency properties', function(){
+    expect(dogWithFreqAndRoot).to.be.an('object');
+    expect(dogWithFreqAndRoot).to.have.property('rootWord');
+    expect(dogWithFreqAndRoot).to.have.property('frequency');
+    expect(dogWithFreqAndRoot).to.have.property('name');
+  });
+});

@@ -10,12 +10,12 @@ const getWordsFromDictionary = (dictionary) => {
     .filter(word => lowerCaseRegExp.test(word) && word.length >= 3)
 };
 
-const getFreqAndRootWords = () => {
+const getFreqAndRootWords = (word) => {
 
 };
 
-const saveWordsToDb = () => {
+const saveWordToDb = (word) => {
 
 };
 
-module.exports = { getWordsFromDictionary, getFreqAndRootWords, saveWordsToDb }
+module.exports = { getWordsFromDictionary, getFreqAndRootWords, saveWordToDb }
